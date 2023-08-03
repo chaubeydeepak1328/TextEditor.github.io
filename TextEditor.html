@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Text Editor</title>
+    <link rel="icon" type="image/png" href="Editor.png" />
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            font-family: Arial, Helvetica, sans-serif;
+            background-image: linear-gradient(rgb(236, 79, 236), rgb(25, 25, 225));
+        }
+
+        div.container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 50px 200px 50px;
+            row-gap: 50px;
+        }
+
+        .text {
+
+            padding-top: 15px;
+            padding-left: 10px;
+            color: white;
+            background-color: blue;
+        }
+
+        .inputArea {
+            justify-self: center;
+        }
+
+        .option {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 50px);
+            gap: 8px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .items {
+            background-color: blue;
+            border: 2px solid black;
+            box-shadow: 1px 2px 1px rgb(40, 33, 33);
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* slider checkbox  */
+        div>.text {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr;
+            grid-template-rows: 1fr;
+        }
+
+        .dark {
+            border: none;
+            border-radius: 50%;
+            height: 30px;
+            width: 30px;
+            float: right;
+            margin-right: 20px;
+            background-color: blue;
+            cursor: pointer;
+        }
+
+        #textarea {
+            border: 2px grey;
+            border-radius: 6px;
+        }
+
+        #textarea:hover {
+            outline: blue;
+        }
+
+        .dark-mode1 {
+            background-color: black;
+        }
+
+        .dark-mode2 {
+            background: rgb(2, 2, 71);
+        }
+
+        .items:hover {
+            background-color: rgb(27, 27, 227);
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="text" id="text">
+            <p>Welcome to the Text editor</p>
+            <p>Length: <span id="output"></span></p>
+            <p>
+                <button class="dark"><ion-icon onclick="Dark()" name="contrast-outline"></ion-icon></button>
+            </p>
+        </div>
+
+
+
+        <div class="inputArea">
+            <textarea name="textarea" id="textarea" cols="40" rows="10" placeholder="type here somthing..."></textarea>
+        </div>
+
+
+        <div class="option">
+            <button class="items" onclick="myclear()">Clear Text</button>
+            <button class="items" onclick="mytrim()">Remove extra space</button>
+            <button class="items" onclick="mylowerCase()">LowerCase</button>
+            <button class="items" onclick="myupperCase()">UpperCase</button>
+            <button class="items" onclick=myreplace()>replace</button>
+            <button class="items" onclick="mycopy()">copy</button>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <script>
+
+        //Length Event Listner
+        var inputBox = document.getElementById("textarea");
+        var output = document.getElementById("output");
+        
+        inputBox.addEventListener("input", function() {
+            output.textContent = inputBox.value.length;
+        });
+
+        function Dark() {
+            document.getElementById("text").classList.toggle("dark-mode1");
+            document.body.classList.toggle("dark-mode2");
+        }
+
+        function myclear() {
+            let d = document.getElementById("textarea");
+            d.value = "";
+        }
+        function mytrim() {
+            var data = document.getElementById("textarea");
+
+
+            function removeSpaces(str) {
+                // n is length of the original string
+                let n = str.length;
+
+                // i points to next position to be filled in
+                // output string/ j points to next character
+                // in the original string
+                let i = 0, j = -1;
+
+                // flag that sets to true is space is found
+                let spaceFound = false;
+
+                // Handles leading spaces
+                while (++j < n && str[j] == ' ');
+
+                // read all characters of original string
+                while (j < n) {
+                    // if current characters is non-space
+                    if (str[j] != ' ') {
+                        // remove preceding spaces before dot,
+                        // comma & question mark
+                        if ((str[j] == '.' || str[j] == ',' ||
+                            str[j] == '?') && i - 1 >= 0 &&
+                            str[i - 1] == ' ')
+                            str = str.substr(0, i - 1) + str[j++] + str.substr(i);
+
+                        else
+                            // copy current character at index i
+                            // and increment both i and j
+                            str = str.substr(0, i++) + str[j++] + str.substr(i);
+
+                        // set space flag to false when any
+                        // non-space character is found
+                        spaceFound = false;
+                    }
+                    // if current character is a space
+                    else if (str[j++] == ' ') {
+                        // If space is encountered for the first
+                        // time after a word, put one space in the
+                        // output and set space flag to true
+                        if (!spaceFound) {
+                            str = str.substr(0, i++) + ' ' + str.substr(i);
+                            spaceFound = true;
+                        }
+                    }
+                }
+
+                // Remove trailing spaces
+                if (i <= 1)
+                    str = str.substr(0, i);
+                else
+                    str = str.substr(0, i - 1);
+
+                return str;
+            }
+
+            str = removeSpaces(data.value);
+            data.value =str;
+            console.log(str);
+
+
+        }
+        function mylowerCase() {
+            let data = document.getElementById("textarea");
+            data.value = data.value.toLowerCase();
+        }
+        function myupperCase() {
+            let data = document.getElementById("textarea");
+            data.value = data.value.toUpperCase();
+        }
+        function myreplace() {
+            let inputData = prompt("Old word/string");
+            let outputData = prompt("Enter the new word/string");
+            let data = document.getElementById("textarea");
+            data.value = data.value.replace(inputData, outputData);
+        }
+        function mycopy() {
+            let data = document.getElementById("textarea");
+            data.select();
+            let len = data.value.length;
+            data.setSelectionRange(0, len);
+            navigator.clipboard.writeText(data.value);
+            alert("successfully copied : " + data.value);
+        }
+    </script>
+</body>
+
+</html>
