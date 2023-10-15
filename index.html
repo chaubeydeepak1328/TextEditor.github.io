@@ -41,6 +41,7 @@
 
         .inputArea {
             justify-self: center;
+            width: 80vw;
         }
 
         .option {
@@ -83,6 +84,8 @@
         #textarea {
             border: 2px grey;
             border-radius: 6px;
+            width: 80vw;
+            padding: 4px 4px ;
         }
 
         #textarea:hover {
@@ -108,7 +111,7 @@
     <div class="container">
         <div class="text" id="text">
             <p>Welcome to the Text editor</p>
-            <p>Length: <span id="output"></span></p>
+            <p>Length: <span id="output">0</span></p>
             <p>
                 <button class="dark"><ion-icon onclick="Dark()" name="contrast-outline"></ion-icon></button>
             </p>
@@ -155,6 +158,7 @@
         function myclear() {
             let d = document.getElementById("textarea");
             d.value = "";
+            document.getElementById("output").innerHTML = 0;
         }
         function mytrim() {
             var data = document.getElementById("textarea");
